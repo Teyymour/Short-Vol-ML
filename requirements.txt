@@ -1,0 +1,20 @@
+requests
+pandas
+numpy>=1.23.5  # Compatible version for catboost and statsmodels
+matplotlib
+sqlalchemy
+plotly
+pandas_market_calendars
+ipywidgets
+ipython
+tqdm
+catboost
+scipy
+statsmodels
+scikit-learn
+seaborn
+matplotlib
+plotly
+pytz
+empyrical-reloaded
+python-dotenv

@@ -1,16 +1,10 @@
-import os
 import requests
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
 from pandas_market_calendars import get_calendar
 
-polygon_api_key = os.getenv("POLYGON_API_KEY")
-
-calendar = get_calendar("NYSE")
-trading_dates = calendar.schedule(start_date="2023-04-20", end_date=datetime.today()).index.strftime("%Y-%m-%d").values
-
-def build_spread_backtest_dataset(dates, ticker, index_ticker, options_ticker, trade_time, move_adjustment, spread_width):
+def build_spread_backtest_dataset(dates, ticker, index_ticker, options_ticker, trade_time, move_adjustment, spread_width, api_key):
     """
     Builds a comprehensive dataset to backtest the base strategy using a walk-forward approach, 
     handling everything from strike selection to fetching quotes.
@@ -33,6 +27,8 @@ def build_spread_backtest_dataset(dates, ticker, index_ticker, options_ticker, t
     spread_width : int
         An integer representing how many strikes apart the long and
         short option will be 
+    api_key : str
+        Your Polygon.io API key
 
     Returns:
     --------
@@ -53,13 +49,14 @@ def build_spread_backtest_dataset(dates, ticker, index_ticker, options_ticker, t
     - The function makes multiple API calls to the Polygon API to retrieve historical data for 
       the underlying asset and option chains and uses environment variables to retrieve API keys, 
       so the key should be set as an environment variable (e.g., `POLYGON_API_KEY`).
+    - This function takes roughly 15 minutes to run due to its walk-forward nature
     """
 
     backtest_dataset = pd.DataFrame()
 
-    for date in dates:
+    for date in dates[1:]:
         try:
-            prior_day = trading_dates[np.where(trading_dates == date)[0][0] - 1]
+            prior_day = dates[np.where(dates == date)[0][0] - 1]
             
             daily_underlying_data = pd.json_normalize(requests.get(f"https://api.polygon.io/v2/aggs/ticker/{ticker}/range/1/day/2020-01-01/{prior_day}?adjusted=true&sort=asc&limit=50000&apiKey={polygon_api_key}").json()["results"]).set_index("t")
             daily_underlying_data.index = pd.to_datetime(daily_underlying_data.index, unit="ms", utc=True).tz_convert("America/New_York")
@@ -194,6 +191,3 @@ def build_spread_backtest_dataset(dates, ticker, index_ticker, options_ticker, t
     backtest_dataset.index = pd.to_datetime(backtest_dataset.index)
 
     return backtest_dataset
-
-backtest_data = build_spread_backtest_dataset(dates=trading_dates[1:], ticker='I:SPX', index_ticker="I:VIX1D", 
-                                              options_ticker="SPX", trade_time="09:35", move_adjustment=0.5, spread_width=1)
