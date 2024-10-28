@@ -9,10 +9,9 @@ Every day, at 9:35 a.m. EST (this is our trade time instead of 9:30 market open 
 1. Determine whether we’ll be selling a call or put spread. We’ll keep this part quite simple, using whether or not price is above its 20-day moving average as a rough proxy. If it’s above, we assume price is in a positive trend/regime and sell a put spread, expecting it to continue moving to the upside and vice versa. 
 2. Determine how far out of the money to sell. We want to strike a balance of selling close enough to the money that we receive a sufficiently large premium for the risk we assume, but far enough from the money such that price is unlikely to be volatile enough to reach these levels. Given that we’re selling 0DTE options, the 1-day volatility index (VIX1D) is quite a good estimator of daily volatility. The value of the VIX1D represents a whole number percentage annualized implied move for the S&P 500, calculated using the implied volatilites of 0 and 1 DTE options on the index. Given that we're interested in the daily expected move, we deannualize this figure to obtain this implied move:
 
-Expected move = v / √252, where:
+Implied move = v / √252, where:
 
    > v = price (value) of the VIX1D
-
 
  There are many ways to approximate realized volatility. For our purposes, we will calculate realized volatility as a whole number percentage (same unit as VIX1D) for our period of interest (trade time to market close) as:
    
@@ -22,6 +21,13 @@ Expected move = v / √252, where:
  
   > p<sub>c</sub> = price at market close
 
+We define the volatility risk premium for a given day as:
+
+VRP = Implied Move - Realized Vol
+
+If this figure is positive, it means that the VIX1D overestimated volatility and vice versa. Let's take a look at some plots over our backtest period (04/24/2023 - 10/25/2024).
+
+![Histogram and Scatter Plot](/Users/teymour/Desktop/qnt-projs/short-vol-github/vrp-plots.png)
 
 Many refer to this type of strategy as  “picking pennies up in front of a steamroller” because it has quite a high win rate but outsized losses. In our case, we see that since the beginning of our testing period, we’ve won __% of the time. However, a corollary of such a high win rate is that the risk profile of this strategy is roughly 1:4, meaning that a single loss negates 4 wins. 
 
