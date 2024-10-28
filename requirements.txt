@@ -18,3 +18,4 @@ plotly
 pytz
 empyrical-reloaded
 python-dotenv
+yfinance
