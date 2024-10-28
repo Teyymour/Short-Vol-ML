@@ -1,6 +1,6 @@
 # Short-Vol-ML
 
-# Base Strategy:
+# Base Strategy Methodology:
 
 Our primary strategy/model is relatively simple and aims to capture the volatility risk premium on the S&P 500 every day. We express this through selling an out-of-the-money, 0DTE credit spread. This means that as long as price doesn’t move enough/in the right direction to put these options in the money by the end of the trading day, we get to keep the premium we collected from selling the spread. The methodology for this strategy is as follows:
 
@@ -34,7 +34,9 @@ We see from the scatter plot that the VRP is overwhelmingly positive, implying t
 
 The histogram shows us that the VIX1D most often overestimates realized volatility by 0.3%-0.5%. The mean overestimation when it does overestimate is ~0.36%. The mean including the times where it underestimates is ~0.18%
 
-Again, we want to be close enough to the money such that our collected premium will be substantial enough. Now knowing that the VIX1D tends to overestimate realized volatility quite often and substantially, we'll take a rather aggressive apporach and discount the implied move every day by 50%. For example, if the VIX1D implies a 100 basis point move, the strike of our short contract will be as close to 50 bps away from the current price as possible. 
+Again, we want to be close enough to the money in order for our collected premium to be large enough. Now knowing that the VIX1D tends to overestimate realized volatility quite often and substantially, we'll take a rather aggressive apporach and discount the implied move every day by 50%. For example, if the VIX1D implies a 100 basis point move, the strike of our short contract will be as close to 50 bps away from the current price as possible. We purchase a long contract 1 strike further out of the money than the short strike to hedge (giving us our "spread"), and that's our trade for the day. 
+
+# Base Strategy Backtest
 
 Many refer to this type of strategy as  “picking pennies up in front of a steamroller” because it has quite a high win rate but outsized losses. In our case, we see that since the beginning of our testing period, we’ve won __% of the time. However, a corollary of such a high win rate is that the risk profile of this strategy is roughly 1:4, meaning that a single loss negates 4 wins. 
 
@@ -46,4 +48,4 @@ Meta-labeling is a technique introduced by Dr. Marcos Lopez de Prado, who explai
 
 This asymmetric risk profile makes the strategy an excellent candidate for meta-labeling because avoiding even a few of these outsized losses vastly improves performance. In this case, our meta-model will be binarily discerning whether to trade or not on a given day. Should we trade, we’ll use a fixed size of 1 of each contract for simplicity’s sake.
 
-Future steps include building a more robust ML pipeline (hyperparameter tuning, etc…), dynamically adjusting position sizing, and finding a more effective way to determine direction (but if doing so were easy, then we’d all be rich ;))
+Future steps include building a more robust ML pipeline (hyperparameter tuning, etc…), dynamically adjusting position sizing, experimenting with different implied move discounts, and finding a more effective way to determine direction (but if doing so were easy, then we’d all be rich ;))
