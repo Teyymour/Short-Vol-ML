@@ -25,9 +25,14 @@ We define the volatility risk premium for a given day as:
 
 VRP = Implied Move - Realized Vol
 
-If this figure is positive, it means that the VIX1D overestimated volatility and vice versa. Let's take a look at some plots over our backtest period (04/24/2023 - 10/25/2024).
+If this figure is positive, it means that the VIX1D overestimated volatility and vice versa. Let's take a look at some plots over our backtest period (04/24/2023 - 10/25/2024):
 
-![Histogram and Scatter Plot](/Users/teymour/Desktop/qnt-projs/short-vol-github/vrp-plots.png)
+## VRP Scatter and Histogram
+![Histogram and Scatter Plot](images/vrp-plots.png)
+
+We see that the VRP is positive overwhelmingly often. Specifically, over
+
+The histogram shows us that the VIX1D most often overestimates realized volatility by 30-50%
 
 Many refer to this type of strategy as  “picking pennies up in front of a steamroller” because it has quite a high win rate but outsized losses. In our case, we see that since the beginning of our testing period, we’ve won __% of the time. However, a corollary of such a high win rate is that the risk profile of this strategy is roughly 1:4, meaning that a single loss negates 4 wins. 
 
