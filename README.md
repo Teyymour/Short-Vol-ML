@@ -30,9 +30,11 @@ If this figure is positive, it means that the VIX1D overestimated volatility and
 ## VRP Scatter and Histogram
 ![Histogram and Scatter Plot](images/vrp-plots.png)
 
-We see that the VRP is positive overwhelmingly often. Specifically, over
+We see from the scatter plot that the VRP is overwhelmingly positive, implying that the VIX1D often overestimates volatility. Specifically, over the backtest period, it overestimated ~74% of the time.
 
-The histogram shows us that the VIX1D most often overestimates realized volatility by 30-50%
+The histogram shows us that the VIX1D most often overestimates realized volatility by 0.3%-0.5%. The mean overestimation when it does overestimate is ~0.36%. The mean including the times where it underestimates is ~0.18%
+
+Again, we want to be close enough to the money such that our collected premium will be substantial enough. Now knowing that the VIX1D tends to overestimate realized volatility quite often and substantially, we'll take a rather aggressive apporach and discount the implied move every day by 50%. For example, if the VIX1D implies a 100 basis point move, the strike of our short contract will be as close to 50 bps away from the current price as possible. 
 
 Many refer to this type of strategy as  “picking pennies up in front of a steamroller” because it has quite a high win rate but outsized losses. In our case, we see that since the beginning of our testing period, we’ve won __% of the time. However, a corollary of such a high win rate is that the risk profile of this strategy is roughly 1:4, meaning that a single loss negates 4 wins. 
 
