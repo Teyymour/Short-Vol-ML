@@ -3,8 +3,9 @@ import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
 from pandas_market_calendars import get_calendar
+from tqdm import tqdm
 
-def build_spread_backtest_dataset(dates, ticker, index_ticker, options_ticker, trade_time, move_adjustment, spread_width, api_key):
+def build_spread_backtest_dataset(dates, ticker, index_ticker, options_ticker, trade_time, move_adjustment, spread_width, polygon_api_key):
     """
     Builds a comprehensive dataset to backtest the base strategy using a walk-forward approach, 
     handling everything from strike selection to fetching quotes.
@@ -27,7 +28,7 @@ def build_spread_backtest_dataset(dates, ticker, index_ticker, options_ticker, t
     spread_width : int
         An integer representing how many strikes apart the long and
         short option will be 
-    api_key : str
+    polygon_api_key : str
         Your Polygon.io API key
 
     Returns:
@@ -54,7 +55,7 @@ def build_spread_backtest_dataset(dates, ticker, index_ticker, options_ticker, t
 
     backtest_dataset = pd.DataFrame()
 
-    for date in dates[1:]:
+    for date in tqdm(dates[1:]):
         try:
             prior_day = dates[np.where(dates == date)[0][0] - 1]
             
