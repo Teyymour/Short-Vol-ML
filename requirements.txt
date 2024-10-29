@@ -19,3 +19,4 @@ pytz
 empyrical-reloaded
 python-dotenv
 yfinance
+numba
