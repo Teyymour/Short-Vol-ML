@@ -56,7 +56,7 @@ Now that we've preprocessed our features and target, we introduce a CatBoost cla
 
 Once we've generated predictions, we can compare against the actual target variables using some classification metrics:
 
-![Classification Metrics](images/classification_metrics.png)
+<img src="images/classification_metrics.png" alt="Classification Metrics" width="425"/>
 
 As we can see, the model does a good job of identifying days on which we should trade, with an F1 score of 0.83 and recall of 0.82. However, these scores for identifying the positive class (avoid trading) are much lower. This is largely due to the class imbalances in our training set, which is a corollary of the already high win rate of the base strategy. While we could certainly use techniques like SMOTE, further increase the weights of the minority class, or assymetrically threshold what prediction probability constitutes the positive class to increase the recall on this minority class, dogin so would likely come at the overwhelming cost of our precision/recall for the majority (do trade) class and our overall f1 score. Again, since this strategy's losses are so outsized, catching even ~1/4 of them while still identifying the vast majority of days on which we should trade significantly improves performance.
 
@@ -105,6 +105,8 @@ Average Win: $108.46
 Average Loss: $342.89
 
 Expected Value Per Trade: $30.73
+
+# Conclusion
 
 Summarizing, meta-labeling has:
 
