@@ -17,7 +17,7 @@ Every day, at 9:35 a.m. EST (this is our trade time instead of 9:30 market open 
 
  There are many ways to approximate realized volatility. For our purposes, we will calculate realized volatility as a whole number percentage (same unit as VIX1D) for our period of interest (trade time to market close) as:
    
- *Realized vol = (| p<sub>t</sub> - p<sub>c</sub> | / p<sub>t</sub>) * 100*, where:
+ *Realized vol = (| p<sub>c</sub> - p<sub>t</sub> | / p<sub>t</sub>) * 100*, where:
    
   > *p<sub>t</sub>* = price at the time of the trade
  
@@ -30,7 +30,7 @@ We define the volatility risk premium for a given day as:
 If this figure is positive, it means that the VIX1D overestimated volatility and vice versa. Let's take a look at some plots over our backtest period (04/24/2023 - 10/25/2024):
 
 ### VRP Scatter and Histogram
-![Histogram and Scatter Plot](images/vrp-plots.png)
+![Histogram and Scatter Plot](images/vrp_plots.png)
 
 We see from the scatter plot that the VRP is overwhelmingly positive, implying that the VIX1D often overestimates volatility. Specifically, over the backtest period, it overestimated ~74% of the time.
 
