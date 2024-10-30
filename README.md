@@ -15,7 +15,7 @@ Every day, at 9:35 a.m. EST (this is our trade time instead of 9:30 market open 
 
    > *v* = price (value) of the VIX1D
 
- There are many ways to approximate realized volatility. For our purposes, we will calculate realized volatility as a whole number percentage (same unit as VIX1D) for our period of interest (trade time to market close) as:
+ There are many ways to approximate realized volatility. Because we are only concerned with the absolute change between the underlying's price at the time we trade vs. market close, we will simply calculate realized volatility as a whole number percentage (same unit as VIX1D) for this period of interest as:
    
  *Realized vol = (| p<sub>c</sub> - p<sub>t</sub> | / p<sub>t</sub>) * 100*, where:
    
@@ -52,7 +52,7 @@ We pull daily historical OHLCV data on the S&P 500 from Yahoo Finance (no need f
 
 We then create our binary target for each day by seeing whether the base strategy had a winning trade. We label a row 0 for win (should have been traded) and 1 otherwise. Though it might sound counterintuitive, we label losing days, i.e. trades we should have avoided, with this 1 to make it the 'positive' class and what we hope to optimize for/predict correctly. This way, when we make our evaluation metric during model training recall, we will be evaluating our recall for identifying days on which we should have avoided trading, which is more important given the strategy's risk profile.
 
-Now that we've preprocessed our features and target, we introduce a CatBoost classification model and make predictions on this data in a walk-forward manner. We first hyperparameter tune using purged k-fold cross validation, using an embargo period to prevent data leakage. Then, starting at the beginning of the backtest period, timestep *t*, we train our model on timesteps *t-150* to *t-1* and make a prediction as to whether we should have avoided trading on *t*, moving forward by one timestep each iteration. 
+Now that we've preprocessed our features and target, we introduce a CatBoost classification model and make predictions on this data in a walk-forward manner. We first hyperparameter tune using purged k-fold cross-validation, optimizing an F1 scoring metric and employing an embargo period in each fold to prevent data leakage. Then, starting at the beginning of the backtest period, timestep *t*, we train our model on timesteps *t-150* to *t-1* and make a prediction as to whether we should have avoided trading on *t*, moving forward by one timestep each iteration. 
 
 Once we've generated predictions, we can compare against the actual target variables using some classification metrics:
 
