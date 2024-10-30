@@ -69,15 +69,15 @@ Let's now take a look at backtests for the base and meta-labeled strategies.
 ### Equity Curve and Performance Metrics
 
 ![Base Strategy Equity Curve](images/base_strat_ec.png)
-Sharpe Ratio: 2.25
+Sharpe Ratio: 2.21
 
-Win Rate: 81.17%
+Win Rate: 81.08%
 
-Average Win: $107.79
+Average Win: $107.87
 
 Average Loss: $357.63
 
-Expected Value Per Trade: $20.13 <br><br>
+Expected Value Per Trade: $19.80 <br><br>
 
 Some notes about these metrics: 
 
@@ -96,32 +96,32 @@ Some notes about these metrics:
 ### Equity Curve and Performance Metrics
 
 ![Meta-labeled Strategy Equity Curve](images/labeled_strat_ec.png)
-Sharpe Ratio: 3.54
+Sharpe Ratio: 2.94
 
-Win Rate: 82.78%
+Win Rate: 82.22%
 
-Average Win: $108.46
+Average Win: $109.27
 
-Average Loss: $342.89
+Average Loss: $347.05
 
-Expected Value Per Trade: $30.73
+Expected Value Per Trade: $28.14
 
 # Conclusion
 
 Summarizing, meta-labeling has:
 
-Increased Sharpe by 57.33%
+Increased Sharpe by 33.03%
 
-Increased win rate by 1.61%
+Increased win rate by 1.14%
 
-Increased average win by 0.62%
+Increased average win by 1.29%
 
-Decreased average loss by 4.12%
+Decreased average loss by 2.96%
 
-Increased EV per trade by 52.66%
+Increased EV per trade by 42.12%
 
 Note that the Sharpes for both the base and labeled strategies are quite steep and likely inflated by some of the more lenient assumptions I've made. 
 
-At any rate, we see a far smoother equity curve upon applying this meta-model, and the improvement metrics speak for themselves.
+At any rate, we see a smoother equity curve upon applying this meta-model, and the improvement metrics speak for themselves.
 
-Future steps include building a more robust ML pipeline (further analysis of features/feature importance, feature transforms, better handling of class imabalance, etc.), dynamically adjusting position sizing, experimenting with different implied move discounts, and finding a more effective way to determine direction (but if doing so were easy, then we’d all be rich ;))
+Future steps include building a more robust ML pipeline (further analysis of features/feature importance, feature transforms, better handling of class imabalance, etc.), dynamically adjusting position sizing, experimenting with different implied move discounts, getting more data to extend the backtest period, and finding a more effective way to determine direction (but if doing so were easy, then we’d all be rich ;))
