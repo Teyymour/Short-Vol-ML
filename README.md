@@ -124,4 +124,4 @@ Note that the Sharpes for both the base and labeled strategies are quite steep a
 
 At any rate, we see a smoother equity curve upon applying this meta-model, and the improvement metrics speak for themselves.
 
-Future steps include building a more robust ML pipeline (further analysis of features/feature importance, feature transforms, better handling of class imabalance, etc.), dynamically adjusting position sizing, experimenting with different implied move discounts, getting more data to extend the backtest period, and finding a more effective way to determine direction (but if doing so were easy, then we’d all be rich ;))
+Future steps include building a more robust ML pipeline (further analysis of features/feature importance, feature transforms, better handling of class imabalance, etc.), dynamically adjusting position sizing, experimenting with different implied move discounts, getting more data to extend the backtest period, and finding a more effective way to determine direction (but if doing so were easy, then we’d all be rich).
