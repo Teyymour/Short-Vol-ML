@@ -27,14 +27,14 @@ We define the volatility risk premium for a given day as:
 
 *VRP = Implied Move - Realized Vol*
 
-If this figure is positive, it means that the VIX1D overestimated volatility and vice versa. Let's take a look at some plots over our backtest period (12/04/2023 - 10/25/2024):
+If this figure is positive, it means that the VIX1D overestimated volatility and vice versa. Let's take a look at some plots over our backtest period (~Nov 2023 - Oct 2024):
 
 ### VRP Scatter and Histogram
 ![Histogram and Scatter Plot](images/vrp_plots.png)
 
 We see from the scatter plot that the VRP is overwhelmingly positive, implying that the VIX1D often overestimates volatility. Specifically, over the backtest period, it overestimated ~76% of the time.
 
-The histogram shows us that the VIX1D most often overestimates realized volatility by 0.3%-0.5%. The mean overestimation when it does overestimate is ~0.35%. The mean including the times where it underestimates is ~0.19%. This means that on a day where the VIX1D implies, say, a 1% move in the underlying, the true move is closer to 0.65%.
+The mean overestimation when it does overestimate is ~0.35%. The mean including the times where it underestimates is ~0.19%. This means that on an overestimating day where the VIX1D implies, say, a 1% move in the underlying, the true move is closer to 0.65%.
 
 Again, we want to be close enough to the money in order for our collected premium to be large enough. Now knowing that the VIX1D tends to overestimate realized volatility quite often and substantially, we'll take a rather aggressive apporach and discount the implied move every day by 50%. For example, if the VIX1D implies a 100 basis point move, the strike of our short contract will be as close to 50 bps away from the current price as possible. We purchase a long contract 1 strike further out of the money than the short strike to hedge (giving us our "spread"), and that's our trade for the day. 
 
@@ -48,11 +48,11 @@ Meta-labeling is a technique introduced by Dr. Marcos Lopez de Prado, who explai
 
 Thw high win rate but asymmetric risk profile of our strategy makes it an excellent candidate for meta-labeling/ Avoiding even a few of these outsized losses would vastly improve performance. In this case, our meta-model will be binarily discerning whether to trade or not on a given day. Should we trade, we’ll use a fixed size of 1 of each contract for simplicity’s sake.
 
-We pull daily historical OHLCV data on the S&P 500 from Yahoo Finance (no need for a fancy API here) and derive price-based features (lagged returns, autocorrelation, indicators, etc.) for our secondary model. Since we trade near market open, we use opening prices to derive many features, such as moving averages. For those features which require info that could only be gained at the end of the trading session (such as a daily high or low), we lag these features by one timestep to avoid data leakage.
+We pull daily historical OHLCV data on the S&P 500 from Yahoo Finance (no need for a fancy API here) and derive price-based features (largely volatility features) for our secondary model. Since we trade near market open, we use opening prices to derive many features. For those features which require info that could only be gained at the end of the trading session (such as a daily high or low), we lag these features by one timestep to avoid data leakage.
 
-We then create our binary target for each day by seeing whether the base strategy had a winning trade. We label a row 0 for win (should have been traded) and 1 otherwise. Though it might sound counterintuitive, we label losing days, i.e. trades we should have avoided, with this 1 to make it the 'positive' class and what we hope to optimize for/predict correctly. This way, when we make our evaluation metric during model training recall, we will be evaluating our recall for identifying days on which we should have avoided trading, which is more important given the strategy's risk profile.
+We then create our binary target for each day by seeing whether the base strategy had a winning trade. We label a row 0 for win (should have been traded) and 1 otherwise. Though it might sound counterintuitive, we label losing days, i.e. trades we should have avoided, with this 1 to make it the 'positive' class and what we hope to optimize for/predict correctly. This way, when we make our evaluation metric during model training F1, we will be evaluating our F1 for identifying days on which we should have avoided trading, which is more important given the strategy's risk profile.
 
-Now that we've preprocessed our features and target, we introduce a CatBoost classification model and make predictions on this data in a walk-forward manner. We first hyperparameter tune using purged k-fold cross-validation, optimizing an F1 scoring metric and employing an embargo period in each fold to prevent data leakage. Then, starting at the beginning of the backtest period, timestep *t*, we train our model on timesteps *t-150* to *t-1* and make a prediction as to whether we should have avoided trading on *t*, moving forward by one timestep each iteration. 
+Now that we've preprocessed our features and target, we introduce a CatBoost classification model and make predictions on this data in a walk-forward manner. Then, starting at the beginning of the backtest period, timestep *t*, we train our model on timesteps *t-140* to *t-1* and make a prediction as to whether we should have avoided trading on *t*, moving forward by one timestep each iteration. 
 
 Once we've generated predictions, we can compare against the actual target variables using some classification metrics:
 
@@ -69,15 +69,15 @@ Let's now take a look at backtests for the base and meta-labeled strategies.
 ### Equity Curve and Performance Metrics
 
 ![Base Strategy Equity Curve](images/base_strat_ec.png)
-Sharpe Ratio: 2.21
+Sharpe Ratio: 2.47
 
-Win Rate: 81.08%
+Win Rate: 81.55%
 
-Average Win: $107.87
+Average Win: $107.36
 
-Average Loss: $357.63
+Average Loss: $358.83
 
-Expected Value Per Trade: $19.80 <br><br>
+Expected Value Per Trade: $21.32 <br><br>
 
 Some notes about these metrics: 
 
@@ -96,32 +96,32 @@ Some notes about these metrics:
 ### Equity Curve and Performance Metrics
 
 ![Meta-labeled Strategy Equity Curve](images/labeled_strat_ec.png)
-Sharpe Ratio: 2.94
+Sharpe Ratio: 3.52
 
-Win Rate: 82.22%
+Win Rate: 83.90%
 
-Average Win: $109.27
+Average Win: $106.59
 
-Average Loss: $347.05
+Average Loss: $349.44
 
-Expected Value Per Trade: $28.14
+Expected Value Per Trade: $33.18
 
 # Conclusion
 
 Summarizing, meta-labeling has:
 
-Increased Sharpe by 33.03%
+Increased Sharpe by 42.19%
 
-Increased win rate by 1.14%
+Increased win rate by 2.35%
 
-Increased average win by 1.29%
+Decreased average win by 0.72% (not ideal but overwhelmed by avg loss decrease)
 
-Decreased average loss by 2.96%
+Decreased average loss by 2.62%
 
-Increased EV per trade by 42.12%
+Increased EV per trade by 55.59%
 
-Note that the Sharpes for both the base and labeled strategies are quite steep and likely inflated by some of the more lenient assumptions I've made. 
+Note that the Sharpes for both the base and labeled strategies are quite steep and likely inflated by some of the more lenient assumptions I've made + the fact that the backtest period was rather short. 
 
 At any rate, we see a smoother equity curve upon applying this meta-model, and the improvement metrics speak for themselves.
 
-Future steps include building a more robust ML pipeline (further analysis of features/feature importance, feature transforms, better handling of class imabalance, etc.), dynamically adjusting position sizing, experimenting with different implied move discounts, getting more data to extend the backtest period, and finding a more effective way to determine direction (but if doing so were easy, then we’d all be rich).
+Future steps include building a more robust ML pipeline (further analysis of features/feature importance, feature transforms, better handling of class imabalance, hyperparameter tuning, etc.), dynamically adjusting position sizing, experimenting with different implied move discounts, getting more data to extend the backtest period, and finding a more effective way to determine direction (but if doing so were easy, then we’d all be rich).
