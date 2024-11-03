@@ -135,4 +135,4 @@ Future steps include:
 - Dynamically adjusting position sizing
 - Experimenting with different implied move discounts
 - Getting more data to extend the backtest period
-- Finding a more effective way to determine direction (but if doing so were easy, then we’d all be rich).
+- Finding a more effective way to determine direction, but if doing so were easy, then we’d all be rich ;)
