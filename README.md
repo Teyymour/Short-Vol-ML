@@ -71,6 +71,8 @@ Let's now take a look at backtests for the base and meta-labeled strategies.
 ![Base Strategy Equity Curve](images/base_strat_ec.png)
 Sharpe Ratio: 2.47
 
+Maximum Drawdown: 26.72%
+
 Win Rate: 81.55%
 
 Average Win: $107.36
@@ -98,6 +100,8 @@ Some notes about these metrics:
 ![Meta-labeled Strategy Equity Curve](images/labeled_strat_ec.png)
 Sharpe Ratio: 3.52
 
+Maximum Drawdown: 23.80%
+
 Win Rate: 83.90%
 
 Average Win: $106.59
@@ -112,6 +116,8 @@ Summarizing, meta-labeling has:
 
 Increased Sharpe by 42.19%
 
+Decreased maximum drawdown by 2.92%
+
 Increased win rate by 2.35%
 
 Decreased average win by 0.72% (not ideal but overwhelmed by avg loss decrease)
@@ -124,4 +130,9 @@ Note that the Sharpes for both the base and labeled strategies are quite steep a
 
 At any rate, we see a smoother equity curve upon applying this meta-model, and the improvement metrics speak for themselves.
 
-Future steps include building a more robust ML pipeline (further analysis of features/feature importance, feature transforms, better handling of class imabalance, hyperparameter tuning, etc.), dynamically adjusting position sizing, experimenting with different implied move discounts, getting more data to extend the backtest period, and finding a more effective way to determine direction (but if doing so were easy, then we’d all be rich).
+Future steps include:
+- Building a more robust ML pipeline (further analysis of features/feature importance, feature transforms, better handling of class imabalance, hyperparameter tuning, etc.)
+- Dynamically adjusting position sizing
+- Experimenting with different implied move discounts
+- Getting more data to extend the backtest period
+- Finding a more effective way to determine direction (but if doing so were easy, then we’d all be rich).
